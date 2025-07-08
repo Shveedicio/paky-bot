@@ -1,0 +1,5 @@
+rootProject.name = "paky-bot"
+
+include("server")
+
+findProject(":server")?.name = "${rootProject.name}-server"

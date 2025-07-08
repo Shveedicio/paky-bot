@@ -1,0 +1,38 @@
+plugins {
+  id "org.springframework.boot" version "$springBootVersion" apply false
+  id "io.spring.dependency-management" version "$dependencyManagementVersion"
+  id "org.jetbrains.kotlin.jvm" version "$kotlinVersion" apply false
+  id "org.jetbrains.kotlin.plugin.spring" version "$kotlinVersion" apply false
+  id "org.jetbrains.kotlin.plugin.jpa" version "$kotlinVersion" apply false
+  id "org.jlleitschuh.gradle.ktlint" version "$ktlintPluginVersion"
+}
+
+subprojects {
+  apply plugin: "org.jetbrains.kotlin.jvm"
+  apply plugin: "org.jetbrains.kotlin.plugin.spring"
+  apply plugin: "io.spring.dependency-management"
+  apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+  repositories {
+    mavenCentral()
+  }
+
+  dependencyManagement {
+    imports {
+      mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+      mavenBom("org.zalando:logbook-bom:$logbookVersion")
+    }
+
+    dependencies {
+      dependency("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
+      dependency("org.zalando:logbook-spring-boot-starter:$logbookVersion")
+
+      dependencySet(group: 'org.telegram', version: telegramBotsVersion) {
+        entry 'telegrambots-springboot-longpolling-starter'
+        entry 'telegrambots-abilities'
+        entry 'telegrambots-client'
+        entry 'telegrambots-longpolling'
+      }
+    }
+  }
+}
