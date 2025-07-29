@@ -26,13 +26,7 @@ subprojects {
     dependencies {
       dependency("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
       dependency("org.zalando:logbook-spring-boot-starter:$logbookVersion")
-
-      dependencySet(group: 'org.telegram', version: telegramBotsVersion) {
-        entry 'telegrambots-springboot-longpolling-starter'
-        entry 'telegrambots-abilities'
-        entry 'telegrambots-client'
-        entry 'telegrambots-longpolling'
-      }
+      dependency("org.telegram:telegrambots-spring-boot-starter:$telegramStarterVersion")
     }
   }
 }
