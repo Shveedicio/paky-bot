@@ -5,6 +5,7 @@ import com.shveed.paky.bot.server.constant.TelegramMessages.COULD_NOT_PROCESS_IM
 import com.shveed.paky.bot.server.constant.TelegramMessages.ON_IMAGE_ACCEPTED
 import com.shveed.paky.bot.server.constant.TelegramMessages.ON_OTHER_TEXT_SENT
 import com.shveed.paky.bot.server.constant.TelegramMessages.ON_START_COMMAND
+import com.shveed.paky.bot.server.constant.TelegramMessages.REQUEST_ACCEPTED
 import com.shveed.paky.bot.server.constant.TelegramMessages.UNKNOWN_ACTION_REQUESTED
 import com.shveed.paky.bot.server.service.ImageProcessingService
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -39,35 +40,13 @@ class TelegramBotMessageHandler(
   private fun handlePhotoMessage(message: Message) {
     val chatId = message.chatId
     try {
-      val photo = message.photo.maxByOrNull { it.fileSize } ?: return
-      val photoFileAsByteArray = imageProcessingService.downloadPhotoFile(photo.fileId)
-
+      imageProcessingService.processImage(message, telegramProps.token)
       sendMessage(chatId, ON_IMAGE_ACCEPTED)
-
-      imageProcessingService.processImageAsync(message, photoFileAsByteArray, chatId)
     } catch (ex: Exception) {
       log.error(ex) { "Error processing photo" }
       sendMessage(chatId, COULD_NOT_PROCESS_IMAGE)
     }
   }
-
-	private fun processImageAsync(message: Message, photoFileAsByteArray: ByteArray, chatId: Long) {
- 		imageProcessingService.processImage(message.from.id, photoFileAsByteArray).thenAccept { search ->
- 			val response = buildString {
- 				appendLine("🔍 Результаты поиска («${search.description}»):")
- 				appendLine()
- 				search.searchResults.forEach { (marketplace, products) ->
- 					appendLine("🛒 $marketplace:")
- 					products.take(3).forEach { p ->
- 						append("• ${p.title} — ${p.price ?: "n/a"} ")
- 						appendLine(p.url)
- 					}
- 					appendLine()
- 				}
- 			}
- 			sendMessage(chatId, response)
- 		}
-	}
 
   private fun handleTextMessage(message: Message) {
     if (message.text.equals(COMMAND_START, ignoreCase = true)) {

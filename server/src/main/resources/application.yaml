@@ -2,6 +2,10 @@ spring:
   application:
     name: paky-bot
 
+  liquibase:
+    enabled: false
+    change-log: classpath:db.changelog/changelog_config.yaml
+
 api:
   ozon: o
   wildberries: o

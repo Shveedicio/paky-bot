@@ -14,7 +14,10 @@ dependencies {
   implementation("org.zalando:logbook-spring-boot-starter")
 
   implementation("org.telegram:telegrambots-spring-boot-starter")
-  implementation 'com.h2database:h2'
+
+  implementation('org.postgresql:postgresql')
+  implementation('org.liquibase:liquibase-core')
+  implementation('com.h2database:h2')
 }
 
 springBoot {

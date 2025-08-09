@@ -18,6 +18,12 @@ data class ImageRequestTask(
   val id: UUID? = null,
   @Column(name = "telegram_id")
   val telegramId: Long,
+  @Column(name = "chat_id")
+  val chatId: Long,
+  @Column(name = "message_id")
+  val messageId: Int,
+  @Column(name = "image_id")
+  val imageId: String,
   @Column(name = "payload", columnDefinition = "text")
   val payload: String? = null,
   @Enumerated(EnumType.STRING)
@@ -25,8 +31,7 @@ data class ImageRequestTask(
   val status: Status,
 //  @Column(columnDefinition = "text")
 //  val searchResults: Map<String, List<ProductResult>>,
-  val createdAt: LocalDateTime = LocalDateTime.now(),
-) {
+) : Auditable() {
   enum class Status {
     CREATED,
     IMAGE_PROCESSING,
