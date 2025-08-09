@@ -11,3 +11,11 @@ Wildberries search: https://www.wildberries.ru/catalog/0/search.aspx?search=ро
 
 JoyCaption: https://huggingface.co/spaces/fancyfeast/joy-caption-beta-one
 InternVL: https://huggingface.co/spaces/OpenGVLab/InternVL
+
+##
+
+## Ideas:
+1. Create and save new entity `consumer` to validate user
+2. Create new entity `consumer_usage` to limit user requests
+3. Create `subscription` functionality
+4. Create `consumer_context` to follow user instructions and keep the state of telegram chat context
