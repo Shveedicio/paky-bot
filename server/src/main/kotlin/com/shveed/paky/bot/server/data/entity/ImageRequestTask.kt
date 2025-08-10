@@ -24,7 +24,7 @@ data class ImageRequestTask(
   @Column(name = "image_id")
   val imageId: String,
   @Column(name = "payload", columnDefinition = "text")
-  val payload: String? = null,
+  var payload: String? = null,
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
   var status: Status,

@@ -5,12 +5,15 @@ plugins {
 }
 
 dependencies {
+  implementation(project(":${rootProject.name}-api"))
+
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("io.github.oshai:kotlin-logging-jvm")
+  implementation('io.github.openfeign:feign-okhttp')
   implementation("org.zalando:logbook-spring-boot-starter")
 
   implementation("org.telegram:telegrambots-spring-boot-starter")

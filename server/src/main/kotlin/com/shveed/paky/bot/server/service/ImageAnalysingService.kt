@@ -19,10 +19,10 @@ class ImageAnalysingService(
     imageRequestTaskRepository.saveAndFlush(imageRequestTask)
 
     try {
-      val imageByteArray =
-        telegramBotMessageHandler.downloadImageFile(imageRequestTask.imageId)
-
+      val imageByteArray = telegramBotMessageHandler.downloadImageFile(imageRequestTask.imageId)
       val description = openAIVisionService.analyzeImage(imageByteArray)
+
+      imageRequestTask.payload = description
       log.info { "Image description: $description" }
     } catch (ex: Exception) {
       log.error(ex) { ex.message }
@@ -35,7 +35,8 @@ class ImageAnalysingService(
         }
         this.attemptCounter++
       }
-      imageRequestTaskRepository.saveAndFlush(imageRequestTask)
     }
+
+    imageRequestTaskRepository.saveAndFlush(imageRequestTask)
   }
 }

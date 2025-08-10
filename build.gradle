@@ -27,6 +27,7 @@ subprojects {
       dependency("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
       dependency("org.zalando:logbook-spring-boot-starter:$logbookVersion")
       dependency("org.telegram:telegrambots-spring-boot-starter:$telegramStarterVersion")
+      dependency("io.github.openfeign:feign-okhttp:$feignOkhttpVersion")
 
       dependency "org.liquibase:liquibase-core:$liquibaseVersion"
       dependency "com.h2database:h2:$h2Version"

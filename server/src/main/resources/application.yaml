@@ -15,12 +15,11 @@ telegram:
     token: test
     username: test
 
-
-
 ai:
   open-ai:
     key: test
-    url: https://api.openai.com/v1/chat/completions
+    url: https://api.openai.com
+    model: gpt-4o
   azure-vision:
     endpoint: test
     key: test
