@@ -21,3 +21,10 @@ telegram:
   bot:
     token: ${TELEGRAM_BOTTOKEN}
     username: ${TELEGRAM_USERNAME}
+
+ai:
+  open-ai:
+    key: ${AI_OPENAI_KEY}
+  azure-vision:
+    endpoint: ${AZURE_VISION_ENDPOINT}
+    key: ${AZURE_VISION_KEY}

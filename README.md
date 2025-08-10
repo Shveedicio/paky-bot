@@ -12,6 +12,8 @@ Wildberries search: https://www.wildberries.ru/catalog/0/search.aspx?search=ро
 JoyCaption: https://huggingface.co/spaces/fancyfeast/joy-caption-beta-one
 InternVL: https://huggingface.co/spaces/OpenGVLab/InternVL
 
+OpenAI Errors: https://platform.openai.com/docs/guides/error-codes/api-errors
+
 ##
 
 ## Ideas:

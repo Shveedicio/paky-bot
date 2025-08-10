@@ -14,3 +14,13 @@ telegram:
   bot:
     token: test
     username: test
+
+
+
+ai:
+  open-ai:
+    key: test
+    url: https://api.openai.com/v1/chat/completions
+  azure-vision:
+    endpoint: test
+    key: test

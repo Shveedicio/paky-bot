@@ -21,3 +21,6 @@ create table if not exists image_request_task
     created_at  timestamp    not null,
     updated_at  timestamp    not null
 );
+
+--changeset Shveed:1.0.0.2
+alter table if exists image_request_task add column attempt_counter int not null default 0;

@@ -7,7 +7,6 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -28,7 +27,9 @@ data class ImageRequestTask(
   val payload: String? = null,
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
-  val status: Status,
+  var status: Status,
+  @Column(name = "attempt_counter")
+  var attemptCounter: Int = 0,
 //  @Column(columnDefinition = "text")
 //  val searchResults: Map<String, List<ProductResult>>,
 ) : Auditable() {
