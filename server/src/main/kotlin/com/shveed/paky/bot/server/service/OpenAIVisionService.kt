@@ -1,10 +1,10 @@
 package com.shveed.paky.bot.server.service
 
-import com.shveed.paky.bot.api.marketplaces.openai.OpenAIApi
-import com.shveed.paky.bot.api.marketplaces.openai.model.ContentItem
-import com.shveed.paky.bot.api.marketplaces.openai.model.ImageUrl
-import com.shveed.paky.bot.api.marketplaces.openai.model.Message
-import com.shveed.paky.bot.api.marketplaces.openai.model.OpenAiRequest
+import com.shveed.paky.bot.api.openai.OpenAIApi
+import com.shveed.paky.bot.api.openai.model.ContentItem
+import com.shveed.paky.bot.api.openai.model.ImageUrl
+import com.shveed.paky.bot.api.openai.model.Message
+import com.shveed.paky.bot.api.openai.model.OpenAiRequest
 import com.shveed.paky.bot.server.config.props.AIProps
 import com.shveed.paky.bot.server.constant.AiRequests.OPEN_AI_IMAGE_DESCRIPTION_REQUEST_TEXT
 import io.github.oshai.kotlinlogging.KotlinLogging

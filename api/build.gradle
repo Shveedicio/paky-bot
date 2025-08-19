@@ -1,11 +1,7 @@
 dependencies {
-  implementation('org.springframework.boot:spring-boot-starter-web')
-  implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+  implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("io.github.oshai:kotlin-logging-jvm")
   implementation("org.zalando:logbook-spring-boot-starter")
 }
 
-jar {
-  enabled = false
-}

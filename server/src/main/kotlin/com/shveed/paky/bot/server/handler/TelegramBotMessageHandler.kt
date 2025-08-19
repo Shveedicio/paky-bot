@@ -5,7 +5,6 @@ import com.shveed.paky.bot.server.constant.TelegramMessages.COULD_NOT_PROCESS_IM
 import com.shveed.paky.bot.server.constant.TelegramMessages.ON_IMAGE_ACCEPTED
 import com.shveed.paky.bot.server.constant.TelegramMessages.ON_OTHER_TEXT_SENT
 import com.shveed.paky.bot.server.constant.TelegramMessages.ON_START_COMMAND
-import com.shveed.paky.bot.server.constant.TelegramMessages.REQUEST_ACCEPTED
 import com.shveed.paky.bot.server.constant.TelegramMessages.UNKNOWN_ACTION_REQUESTED
 import com.shveed.paky.bot.server.service.ImageProcessingService
 import io.github.oshai.kotlinlogging.KotlinLogging

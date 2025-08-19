@@ -1,6 +1,6 @@
-package com.shveed.paky.bot.api.marketplaces.openai
+package com.shveed.paky.bot.api.openai
 
-import com.shveed.paky.bot.api.marketplaces.openai.model.OpenAiRequest
+import com.shveed.paky.bot.api.openai.model.OpenAiRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

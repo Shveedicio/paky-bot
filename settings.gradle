@@ -1,4 +1,4 @@
-rootProject.name = "paky-bot"
+rootProject.name = 'paky-bot'
 
 include("api")
 include("server")

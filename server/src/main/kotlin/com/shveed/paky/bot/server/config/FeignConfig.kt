@@ -1,6 +1,6 @@
 package com.shveed.paky.bot.server.config
 
-import com.shveed.paky.bot.api.marketplaces.openai.OpenAIApi
+import com.shveed.paky.bot.api.openai.OpenAIApi
 import com.shveed.paky.bot.server.config.props.AIProps
 import feign.okhttp.OkHttpClient
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
