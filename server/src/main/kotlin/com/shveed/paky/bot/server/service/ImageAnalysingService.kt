@@ -12,6 +12,7 @@ private val log = KotlinLogging.logger {}
 class ImageAnalysingService(
   private val telegramBotMessageHandler: TelegramBotMessageHandler,
   private val imageRequestTaskRepository: ImageRequestTaskRepository,
+  private val openAIVisionService: OpenAIVisionService,
   private val perplexityVisionService: PerplexityVisionService,
 ) {
   fun analyzeImage(imageRequestTask: ImageRequestTask) {
@@ -20,11 +21,18 @@ class ImageAnalysingService(
 
     try {
       val imageByteArray = telegramBotMessageHandler.downloadImageFile(imageRequestTask.imageId)
-      val productAnalysis = perplexityVisionService.analyzeImageAndSearchProducts(imageByteArray)
 
-      imageRequestTask.payload = productAnalysis
+      // Step 1: Use OpenAI Vision to analyze the image and get product description
+      val productDescription = openAIVisionService.analyzeImage(imageByteArray)
+      log.info { "OpenAI Vision description: $productDescription" }
+
+      // Step 2: Use Perplexity to search for products based on the description
+      val productSearchResults = perplexityVisionService.searchProductsBasedOnDescription(productDescription)
+      log.info { "Perplexity search results: $productSearchResults" }
+
+      imageRequestTask.payload = productSearchResults
       imageRequestTask.status = ImageRequestTask.Status.MARKETPLACE_ANALYSIS
-      log.info { "Product analysis completed: $productAnalysis" }
+      log.info { "Hybrid analysis completed successfully" }
     } catch (ex: Exception) {
       log.error(ex) { ex.message }
 

@@ -8,18 +8,18 @@ object AiRequests {
 			as list of tags for marketplace search. Answer in Russian language.
     """
 
-  const val PERPLEXITY_IMAGE_ANALYSIS_REQUEST_TEXT =
+  const val PERPLEXITY_PRODUCT_SEARCH_REQUEST_TEXT =
     """
-			Analyze this product image and find the 5 best matching products on Russian marketplaces (Ozon, Wildberries, Yandex Market).
-			For each product, provide:
-			- Product name and description
-			- Marketplace name
-			- Estimated price range
-			- Product category
-			- Key features
-
-			Focus on products that are currently available and popular in Russia.
-			Provide your response in Russian language.
-			Format the response as a structured list with clear product recommendations.
+			Найди 5 лучших товаров на российских маркетплейсах (Ozon, Wildberries, Yandex Market) по данному описанию.
+			Для каждого товара предоставь:
+			- Название и описание товара
+			- Название маркетплейса
+			- Диапазон цен
+			- Категорию товара
+			- Ключевые особенности
+			
+			Сосредоточься на товарах, которые сейчас доступны и популярны в России.
+			Предоставь ответ на русском языке.
+			Форматируй ответ как структурированный список с четкими рекомендациями товаров.
     """
 }

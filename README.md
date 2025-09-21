@@ -1,11 +1,11 @@
 # paky-bot
 
-A Telegram bot that analyzes product images and finds matching products on Russian marketplaces using Perplexity AI.
+A Telegram bot that analyzes product images and finds matching products on Russian marketplaces using a hybrid AI approach combining OpenAI Vision and Perplexity API.
 
 ## Features
 
 - **Image Analysis**: Receives product images via Telegram chat
-- **AI-Powered Search**: Uses Perplexity API to analyze images and find matching products
+- **Hybrid AI Approach**: Combines OpenAI Vision for image analysis with Perplexity API for product search
 - **Multi-Marketplace Support**: Searches across Ozon, Wildberries, and Yandex Market
 - **Top 5 Results**: Returns the best 5 matching products with details
 - **Asynchronous Processing**: Background jobs handle image processing and response generation
@@ -16,20 +16,21 @@ A Telegram bot that analyzes product images and finds matching products on Russi
 
 1. **TelegramBotMessageHandler**: Handles incoming messages and image uploads
 2. **ImageProcessingService**: Creates processing tasks for uploaded images
-3. **PerplexityVisionService**: Analyzes images using Perplexity API
-4. **MarketPlaceSearchingService**: Searches products across multiple marketplaces
-5. **ResponseGenerationService**: Formats and sends results to users
+3. **OpenAIVisionService**: Analyzes images to extract product descriptions
+4. **PerplexityVisionService**: Searches for products using Perplexity API
+5. **MarketPlaceSearchingService**: Searches products across multiple marketplaces
+6. **ResponseGenerationService**: Formats and sends results to users
 
 ### Background Jobs
 
-- **ImageAnalyzerJob**: Processes images with Perplexity API
+- **ImageAnalyzerJob**: Processes images with hybrid AI approach (OpenAI Vision + Perplexity)
 - **ResponseGenerationJob**: Generates and sends responses to users
 
 ### Data Flow
 
 1. User sends image → TelegramBotMessageHandler
 2. ImageProcessingService creates task → Database
-3. ImageAnalyzerJob picks up task → PerplexityVisionService analyzes image
+3. ImageAnalyzerJob picks up task → OpenAI Vision analyzes image → Perplexity searches products
 4. ResponseGenerationJob formats response → Sends to user
 
 ## Configuration
@@ -38,10 +39,14 @@ A Telegram bot that analyzes product images and finds matching products on Russi
 
 ```yaml
 ai:
+  open-ai:
+    key: your-openai-api-key
+    url: https://api.openai.com
+    model: gpt-4o
   perplexity:
     key: your-perplexity-api-key
     url: https://api.perplexity.ai
-    model: llama-3.1-sonar-large-128k-online
+    model: sonar
 
 api:
   ozon: 
@@ -76,10 +81,21 @@ telegram:
 
 ## AI Integration
 
+### Hybrid Approach
+The bot uses a two-step AI process:
+
+1. **OpenAI Vision**: Analyzes product images to extract detailed descriptions
+2. **Perplexity API**: Searches for matching products based on the description
+
+### OpenAI Vision
+- **Model**: `gpt-4o`
+- **Capabilities**: Image analysis and description generation
+- **Use Case**: Converts product images into detailed text descriptions
+
 ### Perplexity API
-- **Model**: `llama-3.1-sonar-large-128k-online`
-- **Capabilities**: Image analysis + real-time web search
-- **Use Case**: Analyzes product images and finds matching products on marketplaces
+- **Model**: `sonar`
+- **Capabilities**: Real-time web search and product discovery
+- **Use Case**: Finds matching products on Russian marketplaces based on descriptions
 
 ### Prompt Engineering
 The bot uses specialized prompts to:
