@@ -1,6 +1,7 @@
 package com.shveed.paky.bot.server
 
 import com.shveed.paky.bot.server.config.props.AIProps
+import com.shveed.paky.bot.server.config.props.ApiProps
 import com.shveed.paky.bot.server.config.props.TelegramProps
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -14,6 +15,7 @@ import java.util.TimeZone
 @EnableConfigurationProperties(
   TelegramProps::class,
   AIProps::class,
+  ApiProps::class,
 )
 @EnableAsync
 @EnableFeignClients

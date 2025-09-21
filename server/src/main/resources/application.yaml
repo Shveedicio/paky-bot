@@ -7,8 +7,15 @@ spring:
     change-log: classpath:db.changelog/changelog_config.yaml
 
 api:
-  ozon: o
-  wildberries: o
+  ozon: 
+    url: https://api.ozon.ru
+    key: test
+  wildberries: 
+    url: https://suppliers-api.wildberries.ru
+    key: test
+  yandex-market:
+    url: https://api.partner.market.yandex.ru
+    key: test
 
 telegram:
   bot:
@@ -23,3 +30,7 @@ ai:
   azure-vision:
     endpoint: test
     key: test
+  perplexity:
+    key: test
+    url: https://api.perplexity.ai
+    model: llama-3.1-sonar-large-128k-online

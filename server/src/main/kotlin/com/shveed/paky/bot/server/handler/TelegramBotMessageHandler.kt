@@ -65,7 +65,7 @@ class TelegramBotMessageHandler(
     sendMessage(message.chatId, UNKNOWN_ACTION_REQUESTED.trimIndent())
   }
 
-  private fun sendMessage(chatId: Long, text: String) {
+  fun sendMessage(chatId: Long, text: String) {
     try {
       execute(
         SendMessage(chatId.toString(), text).apply {

@@ -12,7 +12,7 @@ private val log = KotlinLogging.logger {}
 class ImageAnalysingService(
   private val telegramBotMessageHandler: TelegramBotMessageHandler,
   private val imageRequestTaskRepository: ImageRequestTaskRepository,
-  private val openAIVisionService: OpenAIVisionService,
+  private val perplexityVisionService: PerplexityVisionService,
 ) {
   fun analyzeImage(imageRequestTask: ImageRequestTask) {
     imageRequestTask.apply { this.status = ImageRequestTask.Status.IMAGE_PROCESSING }
@@ -20,10 +20,11 @@ class ImageAnalysingService(
 
     try {
       val imageByteArray = telegramBotMessageHandler.downloadImageFile(imageRequestTask.imageId)
-      val description = openAIVisionService.analyzeImage(imageByteArray)
+      val productAnalysis = perplexityVisionService.analyzeImageAndSearchProducts(imageByteArray)
 
-      imageRequestTask.payload = description
-      log.info { "Image description: $description" }
+      imageRequestTask.payload = productAnalysis
+      imageRequestTask.status = ImageRequestTask.Status.MARKETPLACE_ANALYSIS
+      log.info { "Product analysis completed: $productAnalysis" }
     } catch (ex: Exception) {
       log.error(ex) { ex.message }
 
