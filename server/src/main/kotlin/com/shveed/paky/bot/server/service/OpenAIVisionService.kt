@@ -72,11 +72,13 @@ class OpenAIVisionService(private val openAIApi: OpenAIApi, private val aiProps:
     )
 
     log.info { "Sending OpenAI Vision request with image size: ${imageBytes.size} bytes" }
-
+    
     // Debug: Print the actual JSON that will be sent
     val objectMapper = ObjectMapper()
     val jsonString = objectMapper.writeValueAsString(requestBody)
     log.info { "Actual JSON being sent: $jsonString" }
+    
+    log.info { "Making HTTP request to OpenAI API..." }
 
     val response = openAIApi.analyzeMessageRequest(
       authorization = "Bearer ${aiProps.openAi.key}",
@@ -89,6 +91,7 @@ class OpenAIVisionService(private val openAIApi: OpenAIApi, private val aiProps:
       throw RuntimeException("OpenAI API error: ${response.statusCode.value()} - ${response.body}")
     }
 
+    log.info { "OpenAI API request successful, parsing response..." }
     return parseOpenAIResponse(response.body)
   }
 

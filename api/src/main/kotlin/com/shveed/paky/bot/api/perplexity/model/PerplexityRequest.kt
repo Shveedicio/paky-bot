@@ -1,5 +1,8 @@
 package com.shveed.paky.bot.api.perplexity.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class PerplexityRequest(
   val model: String,
   val messages: List<PerplexityMessage>,
@@ -7,7 +10,7 @@ data class PerplexityRequest(
   val temperature: Double? = null,
 )
 
-data class PerplexityMessage(val role: String, val content: List<PerplexityContentItem>)
+data class PerplexityMessage(val role: String, val content: String)
 
 data class PerplexityContentItem(val type: String, val text: String? = null, val imageUrl: PerplexityImageUrl? = null)
 
