@@ -2,9 +2,6 @@ spring:
   application:
     name: paky-bot
 
-  jackson:
-    default-property-inclusion: NON_EMPTY
-
   liquibase:
     enabled: false
     change-log: classpath:db.changelog/changelog_config.yaml
@@ -43,12 +40,6 @@ logging:
     org.zalando.logbook: TRACE
     com.shveed.paky.bot.server.service.OpenAIVisionService: DEBUG
     com.shveed.paky.bot.server.service.PerplexityVisionService: DEBUG
-    # Feign client logging
-    com.shveed.paky.bot.api.openai.OpenAIApi: DEBUG
-    com.shveed.paky.bot.api.perplexity.PerplexityApi: DEBUG
-    com.shveed.paky.bot.api.marketplaces.ozon.OzonApi: DEBUG
-    com.shveed.paky.bot.api.marketplaces.wildberries.WildberriesApi: DEBUG
-    com.shveed.paky.bot.api.marketplaces.yandexmarket.YandexMarketApi: DEBUG
 
 logbook:
   filter:

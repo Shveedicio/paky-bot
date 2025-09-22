@@ -6,8 +6,10 @@ import com.shveed.paky.bot.api.perplexity.model.PerplexityContentItem
 import com.shveed.paky.bot.api.perplexity.model.PerplexityImageUrl
 import com.shveed.paky.bot.api.perplexity.model.PerplexityMessage
 import com.shveed.paky.bot.api.perplexity.model.PerplexityRequest
+import com.shveed.paky.bot.api.perplexity.model.PerplexityResponse
 import com.shveed.paky.bot.server.config.props.AIProps
 import com.shveed.paky.bot.server.constant.AiRequests.PERPLEXITY_PRODUCT_SEARCH_REQUEST_TEXT
+import com.shveed.paky.bot.server.data.model.MarketplaceProduct
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import java.util.Base64
@@ -17,7 +19,7 @@ private val log = KotlinLogging.logger {}
 @Service
 class PerplexityVisionService(private val perplexityApi: PerplexityApi, private val aiProps: AIProps) {
 
-  fun searchProductsBasedOnImage(imageBytes: ByteArray): String {
+  fun searchProductsBasedOnImage(imageBytes: ByteArray): List<MarketplaceProduct> {
     // Validate image size
     if (imageBytes.size > 20 * 1024 * 1024) { // 20MB limit
       throw IllegalArgumentException("Image too large. Maximum size is 20MB")
@@ -77,10 +79,101 @@ class PerplexityVisionService(private val perplexityApi: PerplexityApi, private 
     return parsePerplexityResponse(response.body)
   }
 
-  private fun parsePerplexityResponse(jsonResponse: String): String {
-    // Parse Perplexity response and extract product information
-    // Perplexity should return structured data about found products
-    return jsonResponse
+  private fun parsePerplexityResponse(jsonResponse: String): List<MarketplaceProduct> {
+    try {
+      val objectMapper = ObjectMapper()
+      val perplexityResponse = objectMapper.readValue(jsonResponse, PerplexityResponse::class.java)
+
+      val content = perplexityResponse.choices.firstOrNull()?.message?.content
+        ?: throw RuntimeException("No content found in Perplexity response")
+
+      log.info { "Perplexity response content: $content" }
+
+      return parseProductsFromContent(content)
+    } catch (ex: Exception) {
+      log.error(ex) { "Failed to parse Perplexity response: $jsonResponse" }
+      throw RuntimeException("Failed to parse Perplexity response", ex)
+    }
+  }
+
+  private fun parseProductsFromContent(content: String): List<MarketplaceProduct> {
+    val products = mutableListOf<MarketplaceProduct>()
+
+    // Split content by numbered items (1., 2., 3., etc.)
+    val lines = content.split("\n").filter { it.trim().isNotEmpty() }
+
+    var currentProduct: MarketplaceProduct? = null
+    var currentMarketplace = ""
+    var currentTitle = ""
+    var currentReference = ""
+    var currentRating: Double? = null
+
+    for (line in lines) {
+      val trimmedLine = line.trim()
+
+      // Check if this is a new product (starts with number)
+      if (trimmedLine.matches(Regex("^\\d+\\..*"))) {
+        // Save previous product if exists
+        if (currentProduct != null) {
+          products.add(currentProduct)
+        }
+
+        // Start new product
+        currentTitle = trimmedLine.substringAfter(".").trim()
+        currentMarketplace = ""
+        currentReference = ""
+        currentRating = null
+      }
+
+      // Extract marketplace
+      when {
+        trimmedLine.contains("Ozon", ignoreCase = true) -> currentMarketplace = "Ozon"
+        trimmedLine.contains("Wildberries", ignoreCase = true) -> currentMarketplace = "Wildberries"
+        trimmedLine.contains("Yandex Market", ignoreCase = true) -> currentMarketplace = "Yandex Market"
+      }
+
+      // Extract rating (look for patterns like "4.5/5", "4.5⭐", etc.)
+      val ratingMatch = Regex("(\\d+\\.?\\d*)\\s*[⭐/]?\\s*5?").find(trimmedLine)
+      if (ratingMatch != null) {
+        try {
+          currentRating = ratingMatch.groupValues[1].toDouble()
+        } catch (e: NumberFormatException) {
+          // Ignore invalid rating
+        }
+      }
+
+      // Extract reference/URL
+      val urlMatch = Regex("https?://[^\\s]+").find(trimmedLine)
+      if (urlMatch != null) {
+        currentReference = urlMatch.value
+      }
+    }
+
+    // Add the last product
+    if (currentTitle.isNotEmpty()) {
+      products.add(
+        MarketplaceProduct(
+          marketplace = currentMarketplace.ifEmpty { "Неизвестно" },
+          productTitle = currentTitle,
+          reference = currentReference.ifEmpty { "Ссылка не найдена" },
+          rating = currentRating,
+        ),
+      )
+    }
+
+    // Ensure we have at least some products, create fallback if needed
+    if (products.isEmpty()) {
+      products.add(
+        MarketplaceProduct(
+          marketplace = "Результат не найден",
+          productTitle = "Товары не найдены",
+          reference = "Попробуйте другое изображение",
+          rating = null,
+        ),
+      )
+    }
+
+    return products.take(5) // Limit to top 5 products
   }
 
   private fun detectImageFormat(imageBytes: ByteArray): String = when {

@@ -1,5 +1,6 @@
 package com.shveed.paky.bot.server.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.shveed.paky.bot.server.data.entity.ImageRequestTask
 import com.shveed.paky.bot.server.data.repository.ImageRequestTaskRepository
 import com.shveed.paky.bot.server.handler.TelegramBotMessageHandler
@@ -14,6 +15,7 @@ class ImageAnalysingService(
   private val imageRequestTaskRepository: ImageRequestTaskRepository,
   private val perplexityVisionService: PerplexityVisionService,
 ) {
+  private val objectMapper = ObjectMapper()
   fun analyzeImage(imageRequestTask: ImageRequestTask) {
     imageRequestTask.apply { this.status = ImageRequestTask.Status.IMAGE_PROCESSING }
     imageRequestTaskRepository.saveAndFlush(imageRequestTask)
@@ -25,7 +27,8 @@ class ImageAnalysingService(
       val productSearchResults = perplexityVisionService.searchProductsBasedOnImage(imageByteArray)
       log.info { "Perplexity Vision search results: $productSearchResults" }
 
-      imageRequestTask.payload = productSearchResults
+      // Serialize the list of products to JSON for storage
+      imageRequestTask.payload = objectMapper.writeValueAsString(productSearchResults)
       imageRequestTask.status = ImageRequestTask.Status.MARKETPLACE_ANALYSIS
       log.info { "Image analysis completed successfully" }
     } catch (ex: Exception) {
