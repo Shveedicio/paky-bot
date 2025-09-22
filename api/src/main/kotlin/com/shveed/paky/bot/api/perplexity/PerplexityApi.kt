@@ -1,5 +1,6 @@
 package com.shveed.paky.bot.api.perplexity
 
+import PerplexityResponse
 import com.shveed.paky.bot.api.perplexity.model.PerplexityRequest
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -17,5 +18,5 @@ interface PerplexityApi {
   fun analyzeImageAndSearchProducts(
     @RequestHeader("Authorization") authorization: String,
     @RequestBody requestBody: PerplexityRequest,
-  ): ResponseEntity<String>
+  ): ResponseEntity<PerplexityResponse>
 }

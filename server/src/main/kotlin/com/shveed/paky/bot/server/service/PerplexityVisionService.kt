@@ -1,12 +1,12 @@
 package com.shveed.paky.bot.server.service
 
+import PerplexityResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.shveed.paky.bot.api.perplexity.PerplexityApi
 import com.shveed.paky.bot.api.perplexity.model.PerplexityContentItem
 import com.shveed.paky.bot.api.perplexity.model.PerplexityImageUrl
 import com.shveed.paky.bot.api.perplexity.model.PerplexityMessage
 import com.shveed.paky.bot.api.perplexity.model.PerplexityRequest
-import com.shveed.paky.bot.api.perplexity.model.PerplexityResponse
 import com.shveed.paky.bot.server.config.props.AIProps
 import com.shveed.paky.bot.server.constant.AiRequests.PERPLEXITY_PRODUCT_SEARCH_REQUEST_TEXT
 import com.shveed.paky.bot.server.data.model.MarketplaceProduct
@@ -25,7 +25,7 @@ class PerplexityVisionService(private val perplexityApi: PerplexityApi, private 
       throw IllegalArgumentException("Image too large. Maximum size is 20MB")
     }
 
-    val base64Image = Base64.getEncoder().encodeToString(imageBytes)
+    val base64Image = Base64.getEncoder().encode(imageBytes)
 
     // Detect image format
     val imageFormat = detectImageFormat(imageBytes)
@@ -40,7 +40,7 @@ class PerplexityVisionService(private val perplexityApi: PerplexityApi, private 
       ),
       PerplexityContentItem(
         type = "image_url",
-        imageUrl = PerplexityImageUrl(url = "data:$imageFormat;base64,$base64Image"),
+        imageUrl = PerplexityImageUrl(url = "data:$imageFormat;base64".toByteArray().plus(base64Image)),
       ),
     )
 
@@ -79,19 +79,15 @@ class PerplexityVisionService(private val perplexityApi: PerplexityApi, private 
     return parsePerplexityResponse(response.body)
   }
 
-  private fun parsePerplexityResponse(jsonResponse: String): List<MarketplaceProduct> {
+  private fun parsePerplexityResponse(perplexityResponse: PerplexityResponse): List<MarketplaceProduct> {
     try {
-      val objectMapper = ObjectMapper()
-      val perplexityResponse = objectMapper.readValue(jsonResponse, PerplexityResponse::class.java)
-
       val content = perplexityResponse.choices.firstOrNull()?.message?.content
         ?: throw RuntimeException("No content found in Perplexity response")
-
       log.info { "Perplexity response content: $content" }
 
       return parseProductsFromContent(content)
     } catch (ex: Exception) {
-      log.error(ex) { "Failed to parse Perplexity response: $jsonResponse" }
+      log.error(ex) { "Failed to parse Perplexity response: $perplexityResponse" }
       throw RuntimeException("Failed to parse Perplexity response", ex)
     }
   }
